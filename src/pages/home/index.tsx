@@ -1,4 +1,7 @@
 import { Play } from 'phosphor-react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as zod from 'zod'
 
 import {
   CountdownWrapper,
@@ -10,14 +13,38 @@ import {
 } from './styles'
 
 export const Home = () => {
+  const pomodoroFormValidationSchema = zod.object({
+    task: zod.string().min(1, 'Informe a tarefa'),
+    minutesAmount: zod
+      .number()
+      .min(5, 'O ciclo precisa ser de no mínimo 5 minutos')
+      .max(60, 'O ciclo precisa ser de no máximo 60 minutos'),
+  })
+
+  type PomodoroFormProps = zod.infer<typeof pomodoroFormValidationSchema>
+
+  const { register, handleSubmit, reset } = useForm<PomodoroFormProps>({
+    resolver: zodResolver(pomodoroFormValidationSchema),
+    defaultValues: {
+      minutesAmount: 0,
+      task: '',
+    },
+  })
+
+  function onPomodoroFormSubmit(data: PomodoroFormProps) {
+    console.log(data)
+    reset()
+  }
+
   return (
     <Wrapper>
-      <form id="pomodoroForm">
+      <form id="pomodoroForm" onSubmit={handleSubmit(onPomodoroFormSubmit)}>
         <label htmlFor="task">Vou trabalhar em </label>
         <TaskInput
           id="task"
           list="task-suggestions"
           placeholder="Dê um nome para seu projeto"
+          {...register('task')}
         />
 
         <datalist id="task-suggestions">
@@ -34,6 +61,7 @@ export const Home = () => {
           step={5}
           max={60}
           min={5}
+          {...register('minutesAmount', { valueAsNumber: true })}
         />
         <span>minutos.</span>
       </form>
