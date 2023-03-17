@@ -1,11 +1,11 @@
 import { differenceInSeconds } from 'date-fns'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useCycleContext } from '../../../../context/CycleContext'
 import { CountdownWrapper, Separator } from './styles'
 
 export const CountDown = () => {
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(0)
-  const { activeCycle, finishedCycle } = useCycleContext()
+  const { activeCycle, amountSecondsPassed, finishedCycle, setSecondsPassed } =
+    useCycleContext()
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
@@ -22,7 +22,7 @@ export const CountDown = () => {
     if (activeCycle) {
       if (currentSeconds > 0) {
         interval = setInterval(() => {
-          setAmountSecondsPassed(
+          setSecondsPassed(
             differenceInSeconds(new Date(), activeCycle?.startDate),
           )
         }, 1000)
@@ -34,7 +34,7 @@ export const CountDown = () => {
     return () => {
       clearInterval(interval)
     }
-  }, [activeCycle, currentSeconds, finishedCycle])
+  }, [activeCycle, currentSeconds, finishedCycle, setSecondsPassed])
 
   return (
     <CountdownWrapper>

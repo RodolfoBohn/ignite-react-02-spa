@@ -36,7 +36,7 @@ export const CycleForm = () => {
         placeholder="00"
         step={5}
         max={60}
-        min={1}
+        min={5}
         disabled={!!activeCycle}
         {...register('minutesAmount', { valueAsNumber: true })}
       />

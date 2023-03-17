@@ -18,9 +18,11 @@ interface CycleContextType {
   cycles: CycleType[]
   activeCycleId: string
   activeCycle: CycleType | undefined
+  amountSecondsPassed: number
   createNewCycle: (data: CreateCycleProps) => void
   interruptCycle: () => void
   finishedCycle: () => void
+  setSecondsPassed: (seconds: number) => void
 }
 
 const CycleContext = createContext({} as CycleContextType)
@@ -32,6 +34,7 @@ interface CycleProviderProps {
 export function CycleContextProvider({ children }: CycleProviderProps) {
   const [cycles, setCycles] = useState<CycleType[]>([])
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(0)
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
 
   function createNewCycle(data: CreateCycleProps) {
@@ -47,7 +50,7 @@ export function CycleContextProvider({ children }: CycleProviderProps) {
 
     setCycles((state) => [...state, newCycle])
     setActiveCycleId(id)
-    // reset()
+    setAmountSecondsPassed(0)
   }
 
   function interruptCycle() {
@@ -83,12 +86,18 @@ export function CycleContextProvider({ children }: CycleProviderProps) {
     setActiveCycleId(null)
   }
 
+  function setSecondsPassed(seconds: number) {
+    setAmountSecondsPassed(seconds)
+  }
+
   return (
     <CycleContext.Provider
       value={{
         cycles,
         activeCycleId,
         activeCycle,
+        amountSecondsPassed,
+        setSecondsPassed,
         createNewCycle,
         interruptCycle,
         finishedCycle,
