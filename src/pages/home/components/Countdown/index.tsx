@@ -23,7 +23,7 @@ export const CountDown = () => {
       if (currentSeconds > 0) {
         interval = setInterval(() => {
           setSecondsPassed(
-            differenceInSeconds(new Date(), activeCycle?.startDate),
+            differenceInSeconds(new Date(), new Date(activeCycle?.startDate)),
           )
         }, 1000)
       } else {
