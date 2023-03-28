@@ -58,12 +58,6 @@ export function CycleContextProvider({ children }: CycleProviderProps) {
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
   const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(() => {
     if (activeCycle) {
-      console.log(activeCycle.startDate)
-      console.log(new Date(activeCycle.startDate))
-      console.log(
-        'OPA:',
-        differenceInSeconds(new Date(), new Date(activeCycle.startDate)),
-      )
       return differenceInSeconds(new Date(), new Date(activeCycle.startDate))
     }
 
